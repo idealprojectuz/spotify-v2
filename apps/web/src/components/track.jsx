@@ -20,30 +20,32 @@ export const Track = ({ track }) => {
 
   React.useEffect(() => {
     if (open) {
-      Telegram.WebApp.setHeaderColor(
-        Telegram.WebApp.themeParams.secondary_bg_color
-      );
-      Telegram.WebApp.MainButton.show();
-      Telegram.WebApp.MainButton.setParams({
-        is_active: true,
-        color: "#1ED760",
-        text: "Save Telegram",
-      });
-      Telegram.WebApp.MainButton.enable();
-      Telegram.WebApp.MainButton.onClick(() => {
-        const sending = {
-          id: track.youtubeId,
-          title: track.title,
-          artists: track.artists,
-        };
-        Telegram.WebApp.sendData(JSON.stringify(sending));
-        return;
-      });
+      setTimeout(() => {
+        Telegram.WebApp.MainButton.show();
+        Telegram.WebApp.setHeaderColor(
+          Telegram.WebApp.themeParams.secondary_bg_color
+        );
+        Telegram.WebApp.MainButton.setParams({
+          is_active: true,
+          color: "#1ED760",
+          text: "Save Telegram",
+        });
+        // Telegram.WebApp.MainButton.enable();
+        Telegram.WebApp.MainButton.onClick(() => {
+          const sending = {
+            id: track.youtubeId,
+            title: track.title,
+            artists: track.artists,
+          };
+          Telegram.WebApp.sendData(JSON.stringify(sending));
+          return;
+        });
+      }, 1000);
     } else {
       Telegram.WebApp.MainButton.hide();
-      Telegram.WebApp.MainButton.disable();
+      // Telegram.WebApp.MainButton.disable();
     }
-  }, [track.youtubeId, open]);
+  }, [track, open]);
   // Telegram.WebApp.offEvent("mainButtonClicked", handledownload);
   return (
     <>
@@ -62,13 +64,12 @@ export const Track = ({ track }) => {
           <h2 className="title text-left break-words">{track.title}</h2>
 
           <p className="artist text-[12px] text-[var(--tg-theme-subtitle-text-color)]  text-left">
-            {/* {track?.artists?.map((el) => (
+            {track?.artists?.map((el) => (
               <React.Fragment key={el.id}>
                 <span>{el.name} </span>
               </React.Fragment>
-            ))} */}
-            {/* | */}
-            {track.duration.label}
+            ))}
+            |{track.duration.label}
           </p>
           {/* <p className="text-left text-[12px]">{}</p> */}
         </div>

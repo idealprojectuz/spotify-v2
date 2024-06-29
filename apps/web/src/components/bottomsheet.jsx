@@ -17,33 +17,31 @@ export const Bottomsheet = ({ open, setIsOpen, track }) => {
       console.log(error);
     }
   };
-
   React.useEffect(() => {
-    const handleOpen = async () => {
-      if (open) {
-        // await getAudio funksiyasini chaqirish
-        getAudio();
-
-        // audio holati nullga teng emasligini tekshirish
-
-        Telegram.WebApp.setHeaderColor(
-          Telegram.WebApp.themeParams.secondary_bg_color
-        );
-        Telegram.WebApp.MainButton.show();
-        Telegram.WebApp.MainButton.setParams({
-          is_active: true,
-          color: "#1ED760",
-          text: "Save Telegram",
-        });
-      } else {
-        Telegram.WebApp.MainButton.hide();
-
-        Telegram.WebApp.setHeaderColor(Telegram.WebApp.themeParams.bg_color);
-      }
-    };
-
-    handleOpen();
-  }, [open, track?.youtubeId]);
+    getAudio();
+  }, [track, open]);
+  // React.useEffect(() => {
+  // const handleOpen = async () => {
+  //   if (open) {
+  //     // await getAudio funksiyasini chaqirish
+  //     getAudio();
+  //     // audio holati nullga teng emasligini tekshirish
+  //     Telegram.WebApp.setHeaderColor(
+  //       Telegram.WebApp.themeParams.secondary_bg_color
+  //     );
+  //     Telegram.WebApp.MainButton.show();
+  //     Telegram.WebApp.MainButton.setParams({
+  //       is_active: true,
+  //       color: "#1ED760",
+  //       text: "Save Telegram",
+  //     });
+  //   } else {
+  //     Telegram.WebApp.MainButton.hide();
+  //     Telegram.WebApp.setHeaderColor(Telegram.WebApp.themeParams.bg_color);
+  //   }
+  // };
+  // handleOpen();
+  // }, [open, track?.youtubeId]);
   return (
     <div
       style={{

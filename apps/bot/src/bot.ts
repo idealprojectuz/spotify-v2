@@ -11,7 +11,6 @@ dotenv.config({
 
 const token: string = process.env.TOKEN || "";
 const bot = new Telegraf(token, {
-  handlerTimeout: 3000,
   telegram: {
     testEnv: false,
   },
@@ -36,6 +35,7 @@ interface Audio {
   id: string;
   title: string;
   artists: AudiArtist[];
+  thumbnail: string;
 }
 
 bot.on("web_app_data", async (ctx) => {
@@ -43,23 +43,36 @@ bot.on("web_app_data", async (ctx) => {
     const audio: Audio = JSON.parse(ctx.message?.web_app_data?.data);
     const loading = await ctx.reply("⏳");
     ctx.sendChatAction("upload_document");
-    ctx.reply(
-      "id: " +
-        audio.id +
-        " title: " +
-        audio.title +
-        " artists: " +
-        audio.artists[0].name
-    );
+    // ctx.reply(
+    //   "id: " +
+    //     audio.id +
+    //     " title: " +
+    //     audio.title +
+    //     " artists: " +
+    //     audio.artists[0].name
+    // );
     const audioStream = ytdl("https://music.youtube.com/watch?v=" + audio.id, {
       filter: "audioonly",
     });
 
     ctx
-      .replyWithAudio({
-        source: audioStream,
-        filename: audio.title + ".mp3",
-      })
+      .replyWithAudio(
+        {
+          source: audioStream,
+
+          filename: audio.artists[0].name + " - " + audio.title + ".mp3",
+        },
+        {
+          title:
+            audio.artists.map((el) => el.name).concat(" ") +
+            " - " +
+            audio.title,
+          caption: "Download from @spotifyuzmuzbot",
+          thumbnail: {
+            url: audio.thumbnail,
+          },
+        }
+      )
       .then(() => {
         ctx.deleteMessage(loading.message_id);
       });

@@ -1,0 +1,20 @@
+.music-item {
+    background-color: var(--tg-theme-section-bg-color);
+}
+
+
+/* .thumbnail:hover>.thumbnail-overlay {
+    z-index: +1;
+    transition: transform 0.3s linear;
+    transform: translateY(0px);
+} */
+
+.thumbnail-overlay {
+    /* transition: transform 0.2s linear;
+    transform: translateY(100px); */
+    background: linear-gradient(transparent, rgb(0, 0, 0));
+}
+
+.thumbnail {
+    transition: 0.3s ease-in-out;
+}

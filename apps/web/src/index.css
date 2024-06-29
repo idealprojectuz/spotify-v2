@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    color: var(--tg-theme-text-color);
+    /* height: 500px; */
+    /* height: var(--tg-viewport-height); */
+    background-color: var(--tg-theme-secondary-bg-color);
+
+}
+
+/* .container {
+    margin-left: auto;
+    margin-right: auto;
+} */

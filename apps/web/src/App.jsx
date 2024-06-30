@@ -5,38 +5,33 @@ import { Track } from "./components/track";
 import { request } from "./config/config";
 import { Bottomsheet } from "./components/bottomsheet";
 import ContentLoader from "react-content-loader";
+const initProject = () => {
+  Telegram?.WebApp?.expand();
+  window?.Telegram?.WebApp?.ready();
+  function setThemeClass() {
+    document.documentElement.className = Telegram.WebApp.colorScheme;
+    Telegram.WebApp.setHeaderColor(Telegram.WebApp.themeParams.bg_color);
+    Telegram.WebApp.disableClosingConfirmation();
 
+    // setThemeSettings(Telegram.WebApp.themeParams);
+  }
+  Telegram.WebApp.onEvent("themeChanged", setThemeClass);
+  setThemeClass();
+};
 function App() {
-  const [user, setUser] = React.useState(null);
-  const initProject = () => {
-    window?.Telegram?.WebApp?.ready();
-    // window?.Telegram?.WebApp?.requestWriteAccess((status) =>
-    //   console.log(status)
-    // );
-    // console.log(Telegram.WebView.receiveEvent());
-    Telegram?.WebApp?.expand();
-    setUser(Telegram.WebApp.initDataUnsafe);
-    // console.log(Telegram.WebApp.disableClosingConfirmation());
-    function setThemeClass() {
-      document.documentElement.className = Telegram.WebApp.colorScheme;
-      Telegram.WebApp.setHeaderColor(Telegram.WebApp.themeParams.bg_color);
-      Telegram.WebApp.disableClosingConfirmation();
-
-      // setThemeSettings(Telegram.WebApp.themeParams);
-    }
-
-    // console.log(Telegram.WebApp.backgroundColor);
-    Telegram.WebApp.onEvent("themeChanged", setThemeClass);
-    setThemeClass();
-  };
-  const [tracks, setTracks] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
-  React.useEffect(() => {
-    initProject();
-    getMusic();
-  }, []);
-  const data = { text: "Hello world" };
-
+  const [tracks, setTracks] = React.useState(
+    JSON.parse(localStorage.getItem("tracks")) || []
+  );
+  // Telegram.WebApp.CloudStorage.getItems("tracks");
+  // Telegram.WebApp.CloudStorage.getItem("tracks", (error, data) => {
+  //   if (error) {
+  //     console.log(error);
+  //   }
+  //   if (data) {
+  //     console.log(data);
+  //   }
+  // });
+  const [loading, setLoading] = React.useState(false);
   const getMusic = async (search = null) => {
     try {
       setLoading(true);
@@ -48,6 +43,8 @@ function App() {
 
       if (musiclist.status == 200) {
         setTracks(musiclist.data);
+
+        localStorage.setItem("tracks", JSON.stringify(musiclist.data));
       }
     } catch (error) {
       console.log(error);
@@ -55,6 +52,14 @@ function App() {
       setLoading(false);
     }
   };
+  React.useEffect(() => {
+    initProject();
+    if (!tracks.length) {
+      getMusic();
+    }
+    Telegram.WebApp.BackButton.hide();
+  }, []);
+
   return (
     <div className="relative">
       {/* <Loading /> */}
@@ -174,12 +179,8 @@ function App() {
                 </ContentLoader>
               </>
             ) : tracks?.length ? (
-              tracks?.map((track) => {
-                return (
-                  <Suspense key={track?.youtubeId}>
-                    <Track track={track} />
-                  </Suspense>
-                );
+              tracks?.map((track, index) => {
+                return <Track key={index} track={track} />;
               })
             ) : (
               <div className="flex justify-center items-center">
